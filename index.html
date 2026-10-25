@@ -963,8 +963,9 @@ function updateCart() {
     0
   );
 
-  document.getElementById("cart-count").textContent = count;
-  document.getElementById("cart-total").textContent = money(total);try {
+  document.getElementById("cart-total").textContent = money(total);
+
+try {
   localStorage.setItem(
     CART_STORAGE_KEY,
     JSON.stringify(cart.map(item => ({

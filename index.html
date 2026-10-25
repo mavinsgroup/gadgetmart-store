@@ -963,19 +963,266 @@ function updateCart() {
     0
   );
 
+<script>
+"use strict";
+
+const WHATSAPP_NUMBER = "2349070797962";
+const CART_STORAGE_KEY = "gadgetmart_cart";
+
+const products = [
+  {
+    id: 1,
+    name: "Premium Smartphone",
+    category: "phones",
+    price: 250000,
+    description: "Example listing · Update specifications",
+    badge: "POPULAR",
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    id: 2,
+    name: "Modern Smartphone",
+    category: "phones",
+    price: 180000,
+    description: "Example listing · Update specifications",
+    badge: "",
+    image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    id: 3,
+    name: "Premium Laptop",
+    category: "laptops",
+    price: 650000,
+    description: "Example listing · Update specifications",
+    badge: "FEATURED",
+    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    id: 4,
+    name: "Wireless Headphones",
+    category: "accessories",
+    price: 45000,
+    description: "Example listing · Update specifications",
+    badge: "",
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    id: 5,
+    name: "Wireless Earbuds",
+    category: "accessories",
+    price: 30000,
+    description: "Example listing · Update specifications",
+    badge: "",
+    image: "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    id: 6,
+    name: "Everyday Laptop",
+    category: "laptops",
+    price: 420000,
+    description: "Example listing · Update specifications",
+    badge: "",
+    image: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    id: 7,
+    name: "Smartphone Upgrade",
+    category: "phones",
+    price: 320000,
+    description: "Example listing · Update specifications",
+    badge: "",
+    image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    id: 8,
+    name: "Premium Accessories",
+    category: "accessories",
+    price: 20000,
+    description: "Example listing · Update specifications",
+    badge: "",
+    image: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=500&q=80"
+  }
+];
+
+let selectedCategory = "all";
+let cart = [];
+
+// Format Nigerian naira prices.
+function money(amount) {
+  return "₦" + amount.toLocaleString("en-NG");
+}
+
+// Load the previously saved cart.
+function loadCart() {
+  try {
+    const savedCart = JSON.parse(
+      localStorage.getItem(CART_STORAGE_KEY) || "[]"
+    );
+
+    if (!Array.isArray(savedCart)) {
+      return [];
+    }
+
+    const restoredCart = [];
+
+    savedCart.forEach(item => {
+      if (
+        !item ||
+        !Number.isInteger(item.id) ||
+        !Number.isInteger(item.quantity) ||
+        item.quantity < 1
+      ) {
+        return;
+      }
+
+      const product = products.find(
+        product => product.id === item.id
+      );
+
+      if (!product) {
+        return;
+      }
+
+      const existing = restoredCart.find(
+        productItem => productItem.id === product.id
+      );
+
+      if (existing) {
+        existing.quantity += item.quantity;
+      } else {
+        restoredCart.push({
+          ...product,
+          quantity: item.quantity
+        });
+      }
+    });
+
+    return restoredCart;
+  } catch (error) {
+    console.error("Could not load the saved cart:", error);
+    return [];
+  }
+}
+
+// Save only product IDs and quantities.
+function saveCart() {
+  try {
+    localStorage.setItem(
+      CART_STORAGE_KEY,
+      JSON.stringify(
+        cart.map(item => ({
+          id: item.id,
+          quantity: item.quantity
+        }))
+      )
+    );
+  } catch (error) {
+    console.error("Could not save the shopping cart:", error);
+  }
+}
+
+// Display products based on category and search.
+function renderProducts() {
+  const searchInput = document.getElementById("search");
+  const container = document.getElementById("products");
+
+  if (!searchInput || !container) {
+    return;
+  }
+
+  const search = searchInput.value.toLowerCase().trim();
+
+  const filtered = products.filter(product => {
+    const matchesCategory =
+      selectedCategory === "all" ||
+      product.category === selectedCategory;
+
+    const searchableText = [
+      product.name,
+      product.description,
+      product.category
+    ].join(" ").toLowerCase();
+
+    return matchesCategory && searchableText.includes(search);
+  });
+
+  if (!filtered.length) {
+    container.innerHTML =
+      '<div class="empty-message">No matching products found. Try another search.</div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(product => `
+    <article class="product-card">
+      <div class="product-image">
+        ${product.badge
+          ? `<span class="badge">${product.badge}</span>`
+          : ""
+        }
+
+        <img
+          src="${product.image}"
+          alt="${product.name}"
+          loading="lazy"
+          onerror="this.style.display='none'"
+        >
+      </div>
+
+      <div class="product-info">
+        <div class="product-category">${product.category}</div>
+        <h3>${product.name}</h3>
+        <p class="product-description">${product.description}</p>
+        <div class="product-price">${money(product.price)}</div>
+
+        <button
+          class="add-button"
+          onclick="addToCart(${product.id})"
+        >
+          Add to Cart +
+        </button>
+      </div>
+    </article>
+  `).join("");
+}
+
+// Add a product to the cart.
+function addToCart(id) {
+  const product = products.find(item => item.id === id);
+
+  if (!product) {
+    return;
+  }
+
+  const existing = cart.find(item => item.id === id);
+
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push({
+      ...product,
+      quantity: 1
+    });
+  }
+
+  updateCart();
+}
+
+// Update the cart count, total, display and saved data.
+function updateCart() {
+  const count = cart.reduce(
+    (sum, item) => sum + item.quantity,
+    0
+  );
+
+  const total = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
+  document.getElementById("cart-count").textContent = count;
   document.getElementById("cart-total").textContent = money(total);
 
-try {
-  localStorage.setItem(
-    CART_STORAGE_KEY,
-    JSON.stringify(cart.map(item => ({
-      id: item.id,
-      quantity: item.quantity
-    })))
-  );
-} catch (error) {
-  console.error("Could not save the shopping cart:", error);
-}
+  saveCart();
 
   const container = document.getElementById("cart-items");
 
@@ -991,29 +1238,40 @@ try {
         <strong>${item.name}</strong><br>
         ${money(item.price)} × ${item.quantity}
       </div>
+
       <div>
         <strong>${money(item.price * item.quantity)}</strong>
-        <button onclick="removeFromCart(${item.id})">Remove</button>
+        <button
+          onclick="removeFromCart(${item.id})"
+          aria-label="Remove ${item.name} from cart"
+        >
+          Remove
+        </button>
       </div>
     </div>
   `).join("");
 }
 
+// Remove a product from the cart.
 function removeFromCart(id) {
   cart = cart.filter(item => item.id !== id);
   updateCart();
 }
 
+// Open or close the cart.
 function toggleCart(open) {
-  document.getElementById("cart-overlay").classList.toggle("open", open);
+  document.getElementById("cart-overlay")
+    .classList.toggle("open", open);
 }
 
+// Close the cart when the dark background is clicked.
 function overlayClick(event) {
   if (event.target.id === "cart-overlay") {
     toggleCart(false);
   }
 }
 
+// Prepare the order and send it to WhatsApp.
 function checkout() {
   if (!cart.length) {
     alert("Your cart is empty. Add a product first.");
@@ -1021,12 +1279,14 @@ function checkout() {
   }
 
   if (!/^234\d{10}$/.test(WHATSAPP_NUMBER)) {
-    alert("The store owner must configure the WhatsApp business number before checkout can work.");
+    alert("The store's WhatsApp number is not configured correctly.");
     return;
   }
 
   const lines = cart.map(item =>
-    `${item.name} x ${item.quantity} = ${money(item.price * item.quantity)}`
+    `${item.name} x ${item.quantity} = ${
+      money(item.price * item.quantity)
+    }`
   );
 
   const total = cart.reduce(
@@ -1034,38 +1294,52 @@ function checkout() {
     0
   );
 
-  const message =
-    "Hello GadgetMart! I would like to enquire about this order:\n\n" +
-    lines.join("\n") +
-    "\n\nTotal: " + money(total) +
-    "\n\nPlease confirm availability and payment details.";
+  const message = [
+    "Hello GadgetMart! I would like to enquire about this order:",
+    "",
+    ...lines,
+    "",
+    `Total: ${money(total)}`,
+    "",
+    "Please confirm availability and payment details."
+  ].join("\n");
 
   const url =
-    "https://wa.me/" + WHATSAPP_NUMBER +
-    "?text=" + encodeURIComponent(message);
+    "https://wa.me/" +
+    WHATSAPP_NUMBER +
+    "?text=" +
+    encodeURIComponent(message);
 
   window.open(url, "_blank");
 }
 
-document.getElementById("search").addEventListener("input", renderProducts);
+// Search products as the customer types.
+document.getElementById("search")
+  .addEventListener("input", renderProducts);
 
-document.querySelectorAll(".category-button").forEach(button => {
-  button.addEventListener("click", () => {
-    document.querySelectorAll(".category-button").forEach(item =>
-      item.classList.remove("active")
-    );
+// Filter products by category.
+document.querySelectorAll(".category-button")
+  .forEach(button => {
+    button.addEventListener("click", () => {
+      document.querySelectorAll(".category-button")
+        .forEach(item => item.classList.remove("active"));
 
-    button.classList.add("active");
-    selectedCategory = button.dataset.category;
-    renderProducts();
+      button.classList.add("active");
+      selectedCategory = button.dataset.category;
+
+      renderProducts();
+    });
   });
-});
 
-document.getElementById("year").textContent = new Date().getFullYear();
+// Display the current year.
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+
+// Restore the cart before rendering the page.
+cart = loadCart();
 
 renderProducts();
 updateCart();
 </script>
-
 </body>
 </html>

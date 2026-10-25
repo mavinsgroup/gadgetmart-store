@@ -2029,57 +2029,56 @@
     // --------------------------------------------------
 
     function checkout() {
-      if (cart.length === 0) {
-        showToast("Your cart is empty.");
-        return;
-      }
+  if (cart.length === 0) {
+    showToast("Your cart is empty.");
+    return;
+  }
 
-      if (!/^234\d{10}$/.test(WHATSAPP_NUMBER)) {
-        showToast("The WhatsApp number needs to be checked.");
-        return;
-      }
+  const orderLines = cart
+    .map(function (item, index) {
+      const product = getProduct(item.id);
 
-      const orderLines = cart.map(function (item, index) {
-        const product = getProduct(item.id);
+      if (!product) return "";
 
-        if (!product) return "";
+      return (
+        (index + 1) + ". " + product.name +
+        "\nQuantity: " + item.quantity +
+        "\nUnit price: " + formatPrice(product.price) +
+        "\nSubtotal: " +
+        formatPrice(product.price * item.quantity)
+      );
+    })
+    .filter(Boolean);
 
-        const lineTotal = product.price * item.quantity;
+  const message = [
+    "Hello GadgetMart Nigeria!",
+    "",
+    "I would like to place an order:",
+    "",
+    orderLines.join("\n\n"),
+    "",
+    "TOTAL: " + formatPrice(getCartTotal()),
+    "",
+    "Please confirm availability, final pricing and delivery details.",
+    "",
+    "Thank you."
+  ].join("\n");
 
-        return (
-          (index + 1) +
-          ". " +
-          product.name +
-          "\n   Quantity: " +
-          item.quantity +
-          "\n   Unit price: " +
-          formatPrice(product.price) +
-          "\n   Subtotal: " +
-          formatPrice(lineTotal)
-        );
-      }).filter(Boolean);
+  const whatsappURL =
+    "https://wa.me/" +
+    WHATSAPP_NUMBER +
+    "?text=" +
+    encodeURIComponent(message);
 
-      const message = [
-        "Hello GadgetMart Nigeria!",
-        "",
-        "I would like to place an order:",
-        "",
-        orderLines.join("\n\n"),
-        "",
-        "TOTAL: " + formatPrice(getCartTotal()),
-        "",
-        "Please confirm product availability, final price and delivery details.",
-        "",
-        "Thank you."
-      ].join("\n");
+  const whatsappWindow = window.open(
+    whatsappURL,
+    "_blank"
+  );
 
-      const whatsappURL =
-        "https://wa.me/" +
-        WHATSAPP_NUMBER +
-        "?text=" +
-        encodeURIComponent(message);
-
-      window.open(whatsappURL, "_blank", "noopener,noreferrer");
+  if (!whatsappWindow) {
+    showToast("WhatsApp could not open. Please allow pop-ups and try again.");
+  }
+}
     }
 
     // --------------------------------------------------

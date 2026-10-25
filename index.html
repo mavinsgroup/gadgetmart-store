@@ -2080,7 +2080,48 @@ window.open(whatsappURL, "_blank", "noopener,noreferrer");
     });
 
     // --------------------------------------------------
-    // INITIALIZE WEBSITE
+    // --------------------------------------------------
+// CONNECT BUTTONS AND SEARCH TO THEIR FUNCTIONS
+// --------------------------------------------------
+
+// Product search
+document.getElementById("search").addEventListener("input", function () {
+  renderProducts();
+});
+
+// Category filter buttons
+document.querySelectorAll(".category-btn").forEach(function (button) {
+  button.addEventListener("click", function () {
+    setCategory(button.dataset.category);
+  });
+});
+
+// Add-to-cart buttons
+document.getElementById("products").addEventListener("click", function (event) {
+  const button = event.target.closest("[data-add-product]");
+
+  if (!button) return;
+
+  addToCart(button.dataset.addProduct);
+});
+
+// Cart quantity and remove buttons
+document.getElementById("cart-items").addEventListener("click", function (event) {
+  const button = event.target.closest("[data-cart-action]");
+
+  if (!button) return;
+
+  const productId = button.dataset.productId;
+  const action = button.dataset.cartAction;
+
+  if (action === "increase") {
+    changeQuantity(productId, 1);
+  } else if (action === "decrease") {
+    changeQuantity(productId, -1);
+  } else if (action === "remove") {
+    removeFromCart(productId);
+  }
+});// INITIALIZE WEBSITE
     // --------------------------------------------------
 
     document.getElementById("year").textContent =

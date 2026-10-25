@@ -2029,96 +2029,49 @@
     // --------------------------------------------------
 
     function checkout() {
-  if (cart.length === 0) {
-    showToast("Your cart is empty.");
-    return;
-  }
-
-  const orderLines = cart
-    .map(function (item, index) {
-      const product = getProduct(item.id);
-
-      if (!product) return "";
-
-      return (
-        (index + 1) + ". " + product.name +
-        "\nQuantity: " + item.quantity +
-        "\nUnit price: " + formatPrice(product.price) +
-        "\nSubtotal: " +
-        formatPrice(product.price * item.quantity)
-      );
-    })
-    .filter(Boolean);
-
-  const message = [
-    "Hello GadgetMart Nigeria!",
-    "",
-    "I would like to place an order:",
-    "",
-    orderLines.join("\n\n"),
-    "",
-    "TOTAL: " + formatPrice(getCartTotal()),
-    "",
-    "Please confirm availability, final pricing and delivery details.",
-    "",
-    "Thank you."
-  ].join("\n");
-
-  const whatsappURL =
-    "https://wa.me/" +
-    WHATSAPP_NUMBER +
-    "?text=" +
-    encodeURIComponent(message);
-
-  const whatsappWindow = window.open(
-    whatsappURL,
-    "_blank"
-  );
-
-  if (!whatsappWindow) {
-    showToast("WhatsApp could not open. Please allow pop-ups and try again.");
-  }
+if (cart.length === 0) {
+showToast("Your cart is empty.");
+return;
 }
-    }
 
-    // --------------------------------------------------
-    // EVENT LISTENERS
-    // --------------------------------------------------
+const orderLines = cart
+.map(function (item, index) {
+const product = getProduct(item.id);
 
-    document.addEventListener("click", function (event) {
-      const addButton = event.target.closest("[data-add-product]");
+  if (!product) return "";
 
-      if (addButton) {
-        addToCart(addButton.dataset.addProduct);
-        return;
-      }
+  return (
+    (index + 1) + ". " + product.name +
+    "\nQuantity: " + item.quantity +
+    "\nUnit price: " + formatPrice(product.price) +
+    "\nSubtotal: " +
+    formatPrice(product.price * item.quantity)
+  );
+})
+.filter(Boolean);
 
-      const categoryButton = event.target.closest("[data-category]");
+const message = [
+"Hello GadgetMart Nigeria!",
+"",
+"I would like to place an order:",
+"",
+orderLines.join("\n\n"),
+"",
+"TOTAL: " + formatPrice(getCartTotal()),
+"",
+"Please confirm availability, final pricing and delivery details.",
+"",
+"Thank you."
+].join("\n");
 
-      if (categoryButton) {
-        setCategory(categoryButton.dataset.category);
-        return;
-      }
+const whatsappURL =
+"https://wa.me/" +
+WHATSAPP_NUMBER +
+"?text=" +
+encodeURIComponent(message);
 
-      const cartActionButton = event.target.closest("[data-cart-action]");
-
-      if (cartActionButton) {
-        const productId = cartActionButton.dataset.productId;
-        const action = cartActionButton.dataset.cartAction;
-
-        if (action === "increase") {
-          changeQuantity(productId, 1);
-        } else if (action === "decrease") {
-          changeQuantity(productId, -1);
-        } else if (action === "remove") {
-          removeFromCart(productId);
-        }
-      }
-    });
-
-    document.getElementById("search").addEventListener("input", function () {
-      renderProducts();
-    });
+window.open(whatsappURL, "_blank", "noopener,noreferrer");
+}
 
     document.addEventListener("keydown", function (event) {
       if (event.key === "Escape") {

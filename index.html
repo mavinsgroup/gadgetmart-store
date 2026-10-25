@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GadgetMart | Buy, Swap, Sell & Repair</title>
+
+<meta name="description"
+content="Shop smartphones, laptops and accessories. Buy, sell, swap and repair gadgets with GadgetMart.">
+
+<style>
+:root {
+  --blue: #175cd3;
+  --dark: #101828;
+  --light: #f5f8ff;
+  --white: #ffffff;
+  --muted: #667085;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: var(--white);
+  color: var(--dark);
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+header {
+  background: white;
+  padding: 16px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  border-bottom: 1px solid #eaecf0;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--blue);
+}
+
+.logo span {
+  color: var(--dark);
+}
+
+nav {
+  display: flex;
+  gap: 18px;
+  font-size: 14px;
+}
+
+nav a:hover {
+  color: var(--blue);
+}
+
+.hero {
+  background: linear-gradient(135deg, #102a56, #175cd3);
+  color: white;
+  padding: 65px 6%;
+}
+
+.hero h1 {
+  font-size: clamp(32px, 6vw, 54px);
+  line-height: 1.15;
+  max-width: 650px;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  color: #e0eaff;
+  max-width: 520px;
+  margin-bottom: 25px;
+}
+
+.button {
+  display: inline-block;
+  background: var(--blue);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.hero .button {
+  background: white;
+  color: var(--blue);
+}
+
+.search-area {
+  padding: 25px 5%;
+  background: var(--light);
+}
+
+.search-area input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  font-size: 16px;
+  background: white;
+}
+
+section {
+  padding: 45px 5%;
+}
+
+.section-title {
+  font-size: 27px;
+  margin-bottom: 8px;
+}
+
+.section-subtitle {
+  color: var(--muted);
+  margin-bottom: 25px;
+}
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.product {
+  border: 1px solid #eaecf0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+}
+
+.product-image {
+  height: 140px;
+  background: #f2f4f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 58px;
+}
+
+.product-info {
+  padding: 14px;
+}
+
+.product h3 {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.price {
+  color: var(--blue);
+  font-size: 18px;
+  font-weight: 800;
+  margin: 8px 0 12px;
+}
+
+.product .button {
+  width: 100%;
+  text-align: center;
+  font-size: 13px;
+}
+
+.services {
+  background: var(--light);
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.service {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #eaecf0;
+}
+
+.service-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.service h3 {
+  margin-bottom: 8px;
+}
+
+.service p {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.contact {
+  text-align: center;
+}
+
+.contact p {
+  margin: 10px 0 20px;
+  color: var(--muted);
+}
+
+footer {
+  background: var(--dark);
+  color: white;
+  padding: 30px 5%;
+  text-align: center;
+}
+
+footer p {
+  color: #d0d5dd;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.notice {
+  padding: 15px 5%;
+  background: #fffaeb;
+  color: #93370d;
+  font-size: 13px;
+}
+
+@media (min-width: 700px) {
+  .products {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .service-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .product-image {
+    height: 180px;
+  }
+}
+
+@media (max-width: 500px) {
+  header {
+    flex-wrap: wrap;
+  }
+
+  nav {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .hero {
+    padding: 48px 5%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <a href="#" class="logo">Gadget<span>Mart</span></a>
+
+  <nav>
+    <a href="#shop">Shop</a>
+    <a href="#services">Swap</a>
+    <a href="#services">Sell</a>
+    <a href="#services">Repair</a>
+  </nav>
+</header>
+
+<div class="notice">
+  Your gadget destination — buy, swap, sell and repair.
+</div>
+
+<main>
+
+<section class="hero">
+  <h1>Your Next Gadget Is Just A Click Away.</h1>
+
+  <p>
+    Discover smartphones, laptops and accessories.
+    Buy a new device, upgrade through a swap, sell your old phone
+    or request a repair with GadgetMart.
+  </p>
+
+  <a href="#shop" class="button">Explore Gadgets →</a>
+</section>
+
+<div class="search-area">
+  <input
+    type="search"
+    id="search"
+    placeholder="Search phones, laptops and accessories..."
+    aria-label="Search products">
+</div>
+
+<section id="shop">
+  <h2 class="section-title">Featured Gadgets</h2>
+
+  <p class="section-subtitle">
+    Discover your next device.
+  </p>
+
+  <div class="products" id="products">
+
+    <article class="product" data-name="iphone smartphone apple">
+      <div class="product-image">📱</div>
+      <div class="product-info">
+        <h3>Apple iPhone</h3>
+        <p>Explore available models.</p>
+        <div class="price">Ask for price</div>
+        <a class="button" href="#contact">Enquire Now</a>
+      </div>
+    </article>
+
+    <article class="product" data-name="samsung galaxy smartphone">
+      <div class="product-image">📲</div>
+      <div class="product-info">
+        <h3>Samsung Galaxy</h3>
+        <p>Discover Galaxy devices.</p>
+        <div class="price">Ask for price</div>
+        <a class="button" href="#contact">Enquire Now</a>
+      </div>
+    </article>
+
+    <article class="product" data-name="laptop computer">
+      <div class="product-image">💻</div>
+      <div class="product-info">
+        <h3>Laptops</h3>
+        <p>Find your next computer.</p>
+        <div class="price">Ask for price</div>
+        <a class="button" href="#contact">Enquire Now</a>
+      </div>
+    </article>
+
+    <article class="product" data-name="accessories chargers earbuds">
+      <div class="product-image">🎧</div>
+      <div class="product-info">
+        <h3>Accessories</h3>
+        <p>Explore everyday essentials.</p>
+        <div class="price">Ask for price</div>
+        <a class="button" href="#contact">Enquire Now</a>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section class="services" id="services">
+  <h2 class="section-title">More Than Just Gadgets</h2>
+
+  <p class="section-subtitle">
+    Everything your device needs, in one place.
+  </p>
+
+  <div class="service-grid">
+
+    <article class="service">
+      <div class="service-icon">🔄</div>
+      <h3>Swap Your Phone</h3>
+      <p>Looking for an upgrade? Tell us about your current phone.</p>
+      <a class="button" href="#contact">Request Swap</a>
+    </article>
+
+    <article class="service">
+      <div class="service-icon">💰</div>
+      <h3>Sell Your Phone</h3>
+      <p>Have a phone to sell? Contact us for an assessment.</p>
+      <a class="button" href="#contact">Sell Device</a>
+    </article>
+
+    <article class="service">
+      <div class="service-icon">🔧</div>
+      <h3>Repair Your Device</h3>
+      <p>Tell us your device model and the problem you're facing.</p>
+      <a class="button" href="#contact">Request Repair</a>
+    </article>
+
+    <article class="service">
+      <div class="service-icon">🛍️</div>
+      <h3>Buy Gadgets</h3>
+      <p>Find smartphones, laptops and useful accessories.</p>
+      <a class="button" href="#shop">Browse Shop</a>
+    </article>
+
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <h2 class="section-title">Need Help?</h2>
+
+  <p>
+    Contact GadgetMart to enquire about products,
+    phone swaps, used devices and repairs.
+  </p>
+
+  <a
+    class="button"
+    href="https://wa.me/"
+    target="_blank"
+    rel="noopener">
+    Contact Us on WhatsApp
+  </a>
+</section>
+
+</main>
+
+<footer>
+  <a href="#" class="logo">Gadget<span>Mart</span></a>
+
+  <p>Buy. Swap. Sell. Repair.</p>
+
+  <p>&copy; <span id="year"></span> GadgetMart. All rights reserved.</p>
+</footer>
+
+<script>
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+
+document.getElementById("search").addEventListener("input", function () {
+  const query = this.value.toLowerCase().trim();
+
+  document.querySelectorAll(".product").forEach(function (product) {
+    const searchableText =
+      (product.innerText + " " + product.dataset.name).toLowerCase();
+
+    product.style.display =
+      searchableText.includes(query) ? "" : "none";
+  });
+});
+</script>
+
+</body>
+</html>

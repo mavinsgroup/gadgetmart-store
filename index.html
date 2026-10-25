@@ -772,7 +772,7 @@ footer {
   </div>
 </div>
 
-<script>
+    description: "Exam<script>
 /*
   IMPORTANT:
   These are DEMO products and prices.
@@ -975,7 +975,7 @@ const products = [
     name: "Premium Smartphone",
     category: "phones",
     price: 250000,
-    description: "Example listing · Update specifications",
+ple listing · Update specifications",
     badge: "POPULAR",
     image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=500&q=80"
   },
@@ -1226,52 +1226,292 @@ function updateCart() {
 
   const container = document.getElementById("cart-items");
 
-  if (!cart.length) {
+<script>
+"use strict";
+
+const WHATSAPP_NUMBER = "2349070797962";
+const CART_STORAGE_KEY = "gadgetmart_cart";
+
+const products = [
+  {
+    id: 1,
+    name: "Premium Smartphone",
+    category: "phones",
+    price: 250000,
+    description: "Example listing · Update specifications",
+    badge: "POPULAR",
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    id: 2,
+    name: "Modern Smartphone",
+    category: "phones",
+    price: 180000,
+    description: "Example listing · Update specifications",
+    badge: "",
+    image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    id: 3,
+    name: "Premium Laptop",
+    category: "laptops",
+    price: 650000,
+    description: "Example listing · Update specifications",
+    badge: "FEATURED",
+    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    id: 4,
+    name: "Wireless Headphones",
+    category: "accessories",
+    price: 45000,
+    description: "Example listing · Update specifications",
+    badge: "",
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    id: 5,
+    name: "Wireless Earbuds",
+    category: "accessories",
+    price: 30000,
+    description: "Example listing · Update specifications",
+    badge: "",
+    image: "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    id: 6,
+    name: "Everyday Laptop",
+    category: "laptops",
+    price: 420000,
+    description: "Example listing · Update specifications",
+    badge: "",
+    image: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    id: 7,
+    name: "Smartphone Upgrade",
+    category: "phones",
+    price: 320000,
+    description: "Example listing · Update specifications",
+    badge: "",
+    image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    id: 8,
+    name: "Premium Accessories",
+    category: "accessories",
+    price: 20000,
+    description: "Example listing · Update specifications",
+    badge: "",
+    image: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=500&q=80"
+  }
+];
+
+let selectedCategory = "all";
+let cart = [];
+
+function money(amount) {
+  return "₦" + amount.toLocaleString("en-NG");
+}
+
+function loadCart() {
+  try {
+    const saved = JSON.parse(
+      localStorage.getItem(CART_STORAGE_KEY) || "[]"
+    );
+
+    if (!Array.isArray(saved)) return [];
+
+    const restored = [];
+
+    saved.forEach(item => {
+      if (
+        !item ||
+        !Number.isInteger(item.id) ||
+        !Number.isInteger(item.quantity) ||
+        item.quantity < 1
+      ) {
+        return;
+      }
+
+      const product = products.find(p => p.id === item.id);
+
+      if (!product) return;
+
+      const existing = restored.find(p => p.id === item.id);
+
+      if (existing) {
+        existing.quantity += item.quantity;
+      } else {
+        restored.push({
+          ...product,
+          quantity: item.quantity
+        });
+      }
+    });
+
+    return restored;
+  } catch (error) {
+    console.error("Unable to load saved cart:", error);
+    return [];
+  }
+}
+
+function saveCart() {
+  try {
+    localStorage.setItem(
+      CART_STORAGE_KEY,
+      JSON.stringify(
+        cart.map(item => ({
+          id: item.id,
+          quantity: item.quantity
+        }))
+      )
+    );
+  } catch (error) {
+    console.error("Unable to save cart:", error);
+  }
+}
+
+function renderProducts() {
+  const searchInput = document.getElementById("search");
+  const container = document.getElementById("products");
+
+  if (!searchInput || !container) return;
+
+  const search = searchInput.value.toLowerCase().trim();
+
+  const filtered = products.filter(product => {
+    const matchesCategory =
+      selectedCategory === "all" ||
+      product.category === selectedCategory;
+
+    const searchableText = [
+      product.name,
+      product.description,
+      product.category
+    ].join(" ").toLowerCase();
+
+    return matchesCategory && searchableText.includes(search);
+  });
+
+  if (!filtered.length) {
     container.innerHTML =
-      '<p style="color:#aaa;padding-top:20px">Your cart is empty.</p>';
+      '<div class="empty-message">No matching products found. Try another search.</div>';
     return;
   }
 
-  container.innerHTML = cart.map(item => `
-    <div class="cart-item">
-      <div>
-        <strong>${item.name}</strong><br>
-        ${money(item.price)} × ${item.quantity}
+  container.innerHTML = filtered.map(product => `
+    <article class="product-card">
+      <div class="product-image">
+        ${product.badge
+          ? `<span class="badge">${product.badge}</span>`
+          : ""
+        }
+
+        <img
+          src="${product.image}"
+          alt="${product.name}"
+          loading="lazy"
+          onerror="this.style.display='none'"
+        >
       </div>
 
-      <div>
-        <strong>${money(item.price * item.quantity)}</strong>
+      <div class="product-info">
+        <div class="product-category">${product.category}</div>
+        <h3>${product.name}</h3>
+        <p class="product-description">${product.description}</p>
+        <div class="product-price">${money(product.price)}</div>
+
         <button
-          onclick="removeFromCart(${item.id})"
-          aria-label="Remove ${item.name} from cart"
+          class="add-button"
+          onclick="addToCart(${product.id})"
         >
-          Remove
+          Add to Cart +
         </button>
       </div>
-    </div>
+    </article>
   `).join("");
 }
 
-// Remove a product from the cart.
+function addToCart(id) {
+  const product = products.find(item => item.id === id);
+
+  if (!product) return;
+
+  const existing = cart.find(item => item.id === id);
+
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push({
+      ...product,
+      quantity: 1
+    });
+  }
+
+  updateCart();
+}
+
+function updateCart() {
+  const count = cart.reduce(
+    (sum, item) => sum + item.quantity,
+    0
+  );
+
+  const total = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
+  document.getElementById("cart-count").textContent = count;
+  document.getElementById("cart-total").textContent = money(total);
+
+  const container = document.getElementById("cart-items");
+
+  if (!cart.length) {
+    container.innerHTML =
+      '<p style="color:#aaa;padding-top:20px">Your cart is empty.</p>';
+  } else {
+    container.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <div>
+          <strong>${item.name}</strong><br>
+          ${money(item.price)} × ${item.quantity}
+        </div>
+
+        <div>
+          <strong>${money(item.price * item.quantity)}</strong>
+          <button
+            onclick="removeFromCart(${item.id})"
+            aria-label="Remove ${item.name} from cart"
+          >
+            Remove
+          </button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  saveCart();
+}
+
 function removeFromCart(id) {
   cart = cart.filter(item => item.id !== id);
   updateCart();
 }
 
-// Open or close the cart.
 function toggleCart(open) {
   document.getElementById("cart-overlay")
     .classList.toggle("open", open);
 }
 
-// Close the cart when the dark background is clicked.
 function overlayClick(event) {
   if (event.target.id === "cart-overlay") {
     toggleCart(false);
   }
 }
 
-// Prepare the order and send it to WhatsApp.
 function checkout() {
   if (!cart.length) {
     alert("Your cart is empty. Add a product first.");
@@ -1279,14 +1519,12 @@ function checkout() {
   }
 
   if (!/^234\d{10}$/.test(WHATSAPP_NUMBER)) {
-    alert("The store's WhatsApp number is not configured correctly.");
+    alert("The WhatsApp number is configured incorrectly.");
     return;
   }
 
   const lines = cart.map(item =>
-    `${item.name} x ${item.quantity} = ${
-      money(item.price * item.quantity)
-    }`
+    `${item.name} x ${item.quantity} = ${money(item.price * item.quantity)}`
   );
 
   const total = cart.reduce(
@@ -1313,11 +1551,9 @@ function checkout() {
   window.open(url, "_blank");
 }
 
-// Search products as the customer types.
 document.getElementById("search")
   .addEventListener("input", renderProducts);
 
-// Filter products by category.
 document.querySelectorAll(".category-button")
   .forEach(button => {
     button.addEventListener("click", () => {
@@ -1331,11 +1567,9 @@ document.querySelectorAll(".category-button")
     });
   });
 
-// Display the current year.
 document.getElementById("year").textContent =
   new Date().getFullYear();
 
-// Restore the cart before rendering the page.
 cart = loadCart();
 
 renderProducts();

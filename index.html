@@ -964,7 +964,17 @@ function updateCart() {
   );
 
   document.getElementById("cart-count").textContent = count;
-  document.getElementById("cart-total").textContent = money(total);
+  document.getElementById("cart-total").textContent = money(total);try {
+  localStorage.setItem(
+    CART_STORAGE_KEY,
+    JSON.stringify(cart.map(item => ({
+      id: item.id,
+      quantity: item.quantity
+    })))
+  );
+} catch (error) {
+  console.error("Could not save the shopping cart:", error);
+}
 
   const container = document.getElementById("cart-items");
 

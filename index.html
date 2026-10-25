@@ -862,7 +862,34 @@ const products = [
 ];
 
 let selectedCategory = "all";
+const CART_STORAGE_KEY = "gadgetmart_cart";
+
 let cart = [];
+
+try {
+const savedCart = JSON.parse(
+localStorage.getItem(CART_STORAGE_KEY) || "[]"
+);
+
+if (Array.isArray(savedCart)) {
+cart = savedCart.filter(item =>
+Number.isInteger(item.id) &&
+Number.isInteger(item.quantity) &&
+item.quantity > 0 &&
+products.some(product => product.id === item.id)
+).map(item => {
+const product = products.find(p => p.id === item.id);
+
+  return {
+    ...product,
+    quantity: item.quantity
+  };
+});
+
+}
+} catch (error) {
+cart = [];
+}
 
 const money = amount =>
   "₦" + amount.toLocaleString("en-NG");
